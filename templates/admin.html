@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Food - Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .header { background: #2E7D32; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .card { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background: #e8f5e9; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+        .stat-value { font-size: 24px; font-weight: bold; color: #2E7D32; }
+        .logout-btn { background: #f44336; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; float: right; }
+        .logout-btn:hover { background: #d32f2f; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🍔 Urban Food - Panel Administrador</h1>
+        <p>Bienvenido <strong>{{ nombre }}</strong></p>
+        <a href="/logout" class="logout-btn">Cerrar Sesión</a>
+        <div style="clear: both;"></div>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-box">
+            <div class="stat-title">💰 Ventas Hoy</div>
+            <div class="stat-value">${{ "{:,}".format(total_ventas) }}</div>
+            <div class="stat-subtitle">{{ cantidad_ventas }} ventas</div>
+        </div>
+    </div>
+    
+    {% if ventas_por_vendedor %}
+    <div class="card">
+        <h2>👥 Ventas por Vendedor (Hoy)</h2>
+        <table>
+            <tr><th>Vendedor</th><th># Ventas</th><th>Total</th></tr>
+            {% for v in ventas_por_vendedor %}
+            <tr>
+                <td>{{ v[0] }}</td>
+                <td>{{ v[1] }}</td>
+                <td>${{ "{:,}".format(v[2]) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+    
+    {% if ultimas_ventas %}
+    <div class="card">
+        <h2>🛒 Últimas Ventas</h2>
+        <table>
+            <tr><th>Producto</th><th>Cantidad</th><th>Total</th><th>Vendedor</th><th>Estado</th><th>Hora</th></tr>
+            {% for v in ultimas_ventas %}
+            <tr>
+                <td>{{ v[1] }}</td>
+                <td>{{ v[2] }}</td>
+                <td>${{ "{:,}".format(v[3]) }}</td>
+                <td>{{ v[4] }}</td>
+                <td>{{ v[5] }}</td>
+                <td>{{ v[6] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+    
+    {% if top_productos %}
+    <div class="card">
+        <h2>🍔 Productos Más Vendidos (Hoy)</h2>
+        <table>
+            <tr><th>Producto</th><th>Cantidad Vendida</th></tr>
+            {% for p in top_productos %}
+            <tr>
+                <td>{{ p[0] }}</td>
+                <td>{{ p[1] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+    
+    <div class="card">
+        <h3>🔧 Acciones Rápidas</h3>
+        <button onclick="window.location.href='/api/exportar_excel?fecha_inicio={{ hoy }}&fecha_fin={{ hoy }}'">
+            📥 Exportar Ventas de Hoy (Excel)
+        </button>
+        <button onclick="location.reload()" style="margin-left: 10px;">
+            🔄 Actualizar Datos
+        </button>
+    </div>
+    
+    <script>
+        console.log('✅ Panel Admin cargado - Usuario:', '{{ nombre }}');
+        
+        // Actualizar cada 30 segundos
+        setInterval(() => {
+            console.log('🔄 Actualizando datos...');
+            location.reload();
+        }, 30000);
+        
+        // Prueba la API de estadísticas
+        fetch('/api/estadisticas')
+            .then(response => {
+                console.log('📊 API /api/estadisticas - Status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('✅ Datos de API:', data);
+            })
+            .catch(error => {
+                console.error('❌ Error API:', error);
+            });
+    </script>
+</body>
+</html>

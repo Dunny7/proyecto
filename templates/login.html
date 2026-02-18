@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Food - Login</title>
+    <style>
+        body { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            font-family: Arial, sans-serif; 
+            padding: 20px;
+        }
+        .login-container { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 15px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            width: 100%; 
+            max-width: 400px; 
+        }
+        h1 { 
+            text-align: center; 
+            color: #333; 
+            margin-bottom: 30px; 
+            color: #2E7D32; 
+        }
+        .input-group { 
+            margin-bottom: 20px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            color: #555; 
+            font-weight: bold; 
+        }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            border: 2px solid #ddd; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            box-sizing: border-box;
+        }
+        input:focus { 
+            border-color: #4CAF50; 
+            outline: none; 
+        }
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            background: #4CAF50; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: background 0.3s;
+        }
+        button:hover { 
+            background: #45a049; 
+        }
+        .info-box { 
+            background: #f0f8ff; 
+            padding: 15px; 
+            margin-top: 20px; 
+            border-radius: 8px; 
+            border-left: 4px solid #4CAF50;
+            font-size: 14px; 
+        }
+        .qr-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #2E7D32;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .qr-link:hover {
+            text-decoration: underline;
+        }
+        .flash-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .flash-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .flash-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .flash-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>🍔 FRESCA Urban Food</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="/login">
+            <div class="input-group">
+                <label>Usuario</label>
+                <input type="text" name="username" placeholder="admin o vendedor1" required autofocus>
+            </div>
+            <div class="input-group">
+                <label>Contraseña</label>
+                <input type="password" name="password" placeholder="contraseña" required>
+            </div>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+        
+        <div class="info-box">
+            <strong>📡 Acceso desde otros dispositivos:</strong>
+            <p>IP: <code>{{ local_ip or '192.168.x.x' }}</code></p>
+            <p>URL: <code>http://{{ local_ip or '192.168.x.x' }}:5000</code></p>
+            <p><strong>⚠️ Mismo WiFi requerido</strong></p>
+            
+            <a href="/qr_page" class="qr-link">📲 Mostrar Código QR</a>
+        </div>
+        
+        <div class="info-box">
+            <strong>🔑 Credenciales de prueba:</strong><br>
+            👑 Admin: <code>admin</code> / <code>admin123</code><br>
+            👤 Vendedor: <code>vendedor1</code> / <code>vende123</code>
+        </div>
+    </div>
+</body>
+</html>

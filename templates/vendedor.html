@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Food - Panel Vendedor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(to right, #2E7D32, #4CAF50);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            background: white;
+            color: #4CAF50;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .logo-text p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .user-role {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Contenedor principal */
+        .container {
+            display: flex;
+            min-height: calc(100vh - 100px);
+            padding: 20px;
+            gap: 25px;
+        }
+        
+        /* Menú de productos */
+        .menu-section {
+            flex: 3;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .section-title {
+            color: #2E7D32;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f5e9;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: #4CAF50;
+        }
+        
+        /* Categorías */
+        .categorias {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .categoria-btn {
+            background: #e8f5e9;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: #2E7D32;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .categoria-btn.active, .categoria-btn:hover {
+            background: #2E7D32;
+            color: white;
+        }
+        
+        /* Grid de productos */
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        
+        .producto-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .producto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: #4CAF50;
+        }
+        
+        .producto-card:active {
+            transform: translateY(-2px);
+        }
+        
+        .producto-icon {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            color: #4CAF50;
+        }
+        
+        .producto-nombre {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .producto-precio {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #2E7D32;
+            margin-bottom: 12px;
+        }
+        
+        .producto-codigo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f0f0f0;
+            color: #666;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+        
+        .agregar-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        
+        .agregar-btn:hover {
+            background: #3d8b40;
+        }
+        
+        /* Panel del pedido */
+        .pedido-section {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .pedido-card, .pago-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Pedido actual */
+        .pedido-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .limpiar-btn {
+            background: #ffebee;
+            color: #d32f2f;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .limpiar-btn:hover {
+            background: #ffcdd2;
+        }
+        
+        .lista-pedido {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .pedido-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .pedido-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-info h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .item-cantidad {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .cantidad-btn {
+            background: #e8f5e9;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: #2E7D32;
+        }
+        
+        .cantidad-btn:hover {
+            background: #c8e6c9;
+        }
+        
+        .cantidad-num {
+            font-weight: 700;
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .item-precio {
+            font-weight: 700;
+            color: #2E7D32;
+        }
+        
+        .eliminar-item {
+            color: #f44336;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+        }
+        
+        .total-pedido {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #2E7D32;
+            margin-top: 10px;
+        }
+        
+        /* Opciones de pago */
+        .opciones-pago {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .pago-btn {
+            padding: 12px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .pago-btn.active {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+            color: #2E7D32;
+        }
+        
+        /* Botones de acción */
+        .acciones-pedido {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .btn-primary, .btn-secondary {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #2E7D32, #4CAF50);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        /* Modal de éxito */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: popIn 0.3s ease;
+        }
+        
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .modal-icon {
+            font-size: 4rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .modal h2 {
+            color: #2E7D32;
+            margin-bottom: 15px;
+        }
+        
+        .modal-btn {
+            margin-top: 25px;
+            padding: 12px 30px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Notificaciones */
+        .notificacion {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .productos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .user-info {
+                text-align: center;
+            }
+            
+            .productos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            
+            .acciones-pedido {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo-icon">🍔</div>
+            <div class="logo-text">
+                <h1>Urban Food</h1>
+                <p>Sistema de Ventas - Panel Vendedor</p>
+            </div>
+        </div>
+        <div class="user-info">
+            <div class="user-name">{{ nombre }}</div>
+            <div class="user-role"><i class="fas fa-user"></i> VENDEDOR</div>
+        </div>
+        <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+    </div>
+    
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sección del Menú -->
+        <div class="menu-section">
+            <div class="section-title">
+                <i class="fas fa-utensils"></i>
+                <span>Menú de Productos</span>
+            </div>
+            
+            <!-- Categorías -->
+            <div class="categorias">
+                <button class="categoria-btn active" onclick="filtrarCategoria('todos')">🍽️ Todos</button>
+                <button class="categoria-btn" onclick="filtrarCategoria('hamburguesa')">🍔 Hamburguesas</button>
+                <button class="categoria-btn" onclick="filtrarCategoria('perro')">🌭 Perros Calientes</button>
+                <button class="categoria-btn" onclick="filtrarCategoria('bebida')">🥤 Bebidas</button>
+                <button class="categoria-btn" onclick="filtrarCategoria('adicional')">🧀 Adicionales</button>
+            </div>
+            
+            <!-- Grid de productos -->
+            <div class="productos-grid" id="productos-grid">
+                {% for producto in productos %}
+                <div class="producto-card" data-categoria="{{ producto[4] }}" onclick="agregarAlPedido('{{ producto[0] }}', '{{ producto[2] }}', {{ producto[3] }})">
+                    <div class="producto-codigo">{{ producto[1] }}</div>
+                    <div class="producto-icon">
+                        {% if producto[4] == 'hamburguesa' %} 🍔
+                        {% elif producto[4] == 'perro' %} 🌭
+                        {% elif producto[4] == 'bebida' %} 🥤
+                        {% else %} 🧀
+                        {% endif %}
+                    </div>
+                    <div class="producto-nombre">{{ producto[2] }}</div>
+                    <div class="producto-precio">${{ "{:,.0f}".format(producto[3]) }}</div>
+                    <button class="agregar-btn" onclick="event.stopPropagation(); agregarAlPedido('{{ producto[0] }}', '{{ producto[2] }}', {{ producto[3] }})">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Sección del Pedido -->
+        <div class="pedido-section">
+            <!-- Pedido actual -->
+            <div class="pedido-card">
+                <div class="section-title">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Pedido Actual</span>
+                </div>
+                
+                <div class="pedido-header">
+                    <div id="contador-items">0 items en el pedido</div>
+                    <button class="limpiar-btn" onclick="limpiarPedido()">
+                        <i class="fas fa-trash-alt"></i> Limpiar Todo
+                    </button>
+                </div>
+                
+                <div class="lista-pedido" id="lista-pedido">
+                    <!-- Los items se agregarán aquí con JavaScript -->
+                    <div class="pedido-vacio" id="pedido-vacio">
+                        <p style="text-align: center; color: #999; padding: 40px 0;">
+                            <i class="fas fa-cart-plus" style="font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+                            No hay productos en el pedido<br>
+                            <small>Haz clic en los productos del menú para agregarlos</small>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="total-pedido">
+                    <span>Total:</span>
+                    <span id="total-pedido">$0</span>
+                </div>
+            </div>
+            
+            <!-- Sección de pago -->
+            <div class="pago-card">
+                <div class="section-title">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Método de Pago</span>
+                </div>
+                
+                <div class="opciones-pago">
+                    <button class="pago-btn active" data-pago="efectivo" onclick="seleccionarPago('efectivo')">
+                        <i class="fas fa-money-bill-wave"></i><br>Efectivo
+                    </button>
+                    <button class="pago-btn" data-pago="nequi" onclick="seleccionarPago('nequi')">
+                        <i class="fas fa-mobile-alt"></i><br>Nequi
+                    </button>
+                    <button class="pago-btn" data-pago="tarjeta" onclick="seleccionarPago('tarjeta')">
+                        <i class="fas fa-credit-card"></i><br>Tarjeta
+                    </button>
+                    <button class="pago-btn" data-pago="daviplata" onclick="seleccionarPago('daviplata')">
+                        <i class="fas fa-wallet"></i><br>DaviPlata
+                    </button>
+                </div>
+                
+                <div class="acciones-pedido">
+                    <button class="btn-secondary" onclick="imprimirComanda()">
+                        <i class="fas fa-print"></i> Imprimir Comanda
+                    </button>
+                    <button class="btn-primary" id="finalizar-btn" onclick="finalizarPedido()" disabled>
+                        <i class="fas fa-check-circle"></i> Finalizar Venta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de éxito -->
+    <div class="modal" id="modal-exito">
+        <div class="modal-content">
+            <div class="modal-icon">✅</div>
+            <h2>¡Venta Registrada!</h2>
+            <p>El pedido ha sido registrado exitosamente en el sistema.</p>
+            <p><strong>Total: <span id="modal-total">$0</span></strong></p>
+            <p><small>ID de venta: <span id="modal-id">#0000</span></small></p>
+            <button class="modal-btn" onclick="cerrarModal()">Aceptar</button>
+        </div>
+    </div>
+    
+    <!-- Notificación -->
+    <div class="notificacion" id="notificacion">
+        <span id="notificacion-text">Producto agregado al pedido</span>
+    </div>
+    
+    <script>
+        // Variables globales
+        let pedido = [];
+        let metodoPago = 'efectivo';
+        
+        // Formatear número con separadores de miles
+        function formatearNumero(numero) {
+            return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+        
+        // Filtrar productos por categoría
+        function filtrarCategoria(categoria) {
+            // Actualizar botones activos
+            document.querySelectorAll('.categoria-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filtrar productos
+            const cards = document.querySelectorAll('.producto-card');
+            cards.forEach(card => {
+                if (categoria === 'todos' || card.dataset.categoria === categoria) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // Agregar producto al pedido
+        function agregarAlPedido(id, nombre, precio) {
+            // Buscar si el producto ya está en el pedido
+            const index = pedido.findIndex(item => item.id === id);
+            
+            if (index !== -1) {
+                // Si ya existe, aumentar cantidad
+                pedido[index].cantidad++;
+            } else {
+                // Si no existe, agregar nuevo
+                pedido.push({
+                    id: id,
+                    nombre: nombre,
+                    precio: precio,
+                    cantidad: 1
+                });
+            }
+            
+            // Actualizar interfaz
+            actualizarPedidoUI();
+            
+            // Mostrar notificación
+            mostrarNotificacion(`✅ ${nombre} agregado al pedido`);
+        }
+        
+        // Actualizar interfaz del pedido
+        function actualizarPedidoUI() {
+            const listaPedido = document.getElementById('lista-pedido');
+            const contadorItems = document.getElementById('contador-items');
+            const totalPedido = document.getElementById('total-pedido');
+            const finalizarBtn = document.getElementById('finalizar-btn');
+            const pedidoVacio = document.getElementById('pedido-vacio');
+            
+            // Calcular total
+            let total = 0;
+            let cantidadItems = 0;
+            
+            pedido.forEach(item => {
+                total += item.precio * item.cantidad;
+                cantidadItems += item.cantidad;
+            });
+            
+            // Actualizar contador y total
+            contadorItems.textContent = `${cantidadItems} item${cantidadItems !== 1 ? 's' : ''} en el pedido`;
+            totalPedido.textContent = `$${formatearNumero(total)}`;
+            
+            // Habilitar/deshabilitar botón finalizar
+            finalizarBtn.disabled = pedido.length === 0;
+            
+            // Mostrar/ocultar mensaje de pedido vacío
+            if (pedidoVacio) {
+                pedidoVacio.style.display = pedido.length === 0 ? 'block' : 'none';
+            }
+            
+            // Generar HTML de los items
+            if (pedido.length > 0) {
+                let html = '';
+                pedido.forEach((item, index) => {
+                    const subtotal = item.precio * item.cantidad;
+                    html += `
+                    <div class="pedido-item">
+                        <div class="item-info">
+                            <h4>${item.nombre}</h4>
+                            <div>$${formatearNumero(item.precio)} c/u</div>
+                        </div>
+                        <div class="item-cantidad">
+                            <button class="cantidad-btn" onclick="cambiarCantidad(${index}, -1)">-</button>
+                            <span class="cantidad-num">${item.cantidad}</span>
+                            <button class="cantidad-btn" onclick="cambiarCantidad(${index}, 1)">+</button>
+                        </div>
+                        <div class="item-precio">$${formatearNumero(subtotal)}</div>
+                        <button class="eliminar-item" onclick="eliminarItem(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    `;
+                });
+                listaPedido.innerHTML = html;
+            }
+        }
+        
+        // Cambiar cantidad de un item
+        function cambiarCantidad(index, cambio) {
+            pedido[index].cantidad += cambio;
+            
+            // Si la cantidad llega a 0, eliminar el item
+            if (pedido[index].cantidad <= 0) {
+                pedido.splice(index, 1);
+                mostrarNotificacion('❌ Producto eliminado del pedido');
+            }
+            
+            actualizarPedidoUI();
+        }
+        
+        // Eliminar item del pedido
+        function eliminarItem(index) {
+            const nombre = pedido[index].nombre;
+            pedido.splice(index, 1);
+            actualizarPedidoUI();
+            mostrarNotificacion(`❌ ${nombre} eliminado del pedido`);
+        }
+        
+        // Limpiar todo el pedido
+        function limpiarPedido() {
+            if (pedido.length === 0) return;
+            
+            if (confirm('¿Estás seguro de que deseas limpiar todo el pedido?')) {
+                pedido = [];
+                actualizarPedidoUI();
+                mostrarNotificacion('🔄 Pedido limpiado completamente');
+            }
+        }
+        
+        // Seleccionar método de pago
+        function seleccionarPago(tipo) {
+            metodoPago = tipo;
+            
+            // Actualizar botones activos
+            document.querySelectorAll('.pago-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.pago === tipo) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            mostrarNotificacion(`💳 Método de pago: ${tipo.toUpperCase()}`);
+        }
+        
+        // Finalizar pedido
+        async function finalizarPedido() {
+            if (pedido.length === 0) return;
+            
+            // Calcular total
+            const total = pedido.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+            
+            // Crear objeto de venta
+            const venta = {
+                productos: pedido.map(item => ({
+                    producto_id: item.id,
+                    cantidad: item.cantidad,
+                    precio: item.precio
+                })),
+                metodo_pago: metodoPago,
+                total: total
+            };
+            
+            try {
+                // Enviar al servidor
+                const response = await fetch('/api/registrar_venta_completa', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(venta)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Mostrar modal de éxito
+                    document.getElementById('modal-total').textContent = `$${formatearNumero(total)}`;
+                    document.getElementById('modal-id').textContent = `#${data.venta_id ? data.venta_id.toString().padStart(4, '0') : '0000'}`;
+                    document.getElementById('modal-exito').style.display = 'flex';
+                    
+                    // Limpiar pedido
+                    pedido = [];
+                    actualizarPedidoUI();
+                    
+                    // Imprimir comanda automáticamente
+                    setTimeout(imprimirComanda, 500);
+                } else {
+                    alert('Error: ' + (data.error || 'No se pudo registrar la venta'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error de conexión con el servidor');
+            }
+        }
+        
+        // Imprimir comanda
+        function imprimirComanda() {
+            if (pedido.length === 0) {
+                alert('No hay productos en el pedido para imprimir');
+                return;
+            }
+            
+            // Crear contenido para imprimir
+            let contenido = `
+            <style>
+                @media print {
+                    body { font-family: Arial, sans-serif; }
+                    .comanda { width: 80mm; padding: 10px; }
+                    .header { text-align: center; border-bottom: 2px dashed #000; margin-bottom: 10px; }
+                    .item { display: flex; justify-content: space-between; margin: 5px 0; }
+                    .total { border-top: 2px solid #000; margin-top: 10px; padding-top: 10px; font-weight: bold; }
+                    .footer { text-align: center; font-size: 0.8em; margin-top: 15px; }
+                }
+            </style>
+            <div class="comanda">
+                <div class="header">
+                    <h2>FRESCA Urban Food</h2>
+                    <p>Comanda #${Date.now().toString().slice(-6)}</p>
+                    <p>${new Date().toLocaleString()}</p>
+                    <p>Vendedor: {{ nombre }}</p>
+                </div>
+            `;
+            
+            // Agregar items
+            pedido.forEach(item => {
+                contenido += `
+                <div class="item">
+                    <span>${item.cantidad}x ${item.nombre}</span>
+                    <span>$${formatearNumero(item.precio * item.cantidad)}</span>
+                </div>
+                `;
+            });
+            
+            // Calcular total
+            const total = pedido.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+            
+            contenido += `
+                <div class="total">
+                    <span>TOTAL:</span>
+                    <span>$${formatearNumero(total)}</span>
+                </div>
+                <div class="footer">
+                    <p>${metodoPago.toUpperCase()} | ¡Gracias por su compra!</p>
+                    <p>--------------------------------</p>
+                </div>
+            </div>
+            `;
+            
+            // Abrir ventana de impresión
+            const ventanaImpresion = window.open('', '_blank');
+            ventanaImpresion.document.write(contenido);
+            ventanaImpresion.document.close();
+            ventanaImpresion.focus();
+            
+            // Esperar a que cargue y luego imprimir
+            setTimeout(() => {
+                ventanaImpresion.print();
+                ventanaImpresion.close();
+            }, 250);
+            
+            mostrarNotificacion('🖨️ Comanda enviada a impresión');
+        }
+        
+        // Cerrar modal
+        function cerrarModal() {
+            document.getElementById('modal-exito').style.display = 'none';
+        }
+        
+        // Mostrar notificación
+        function mostrarNotificacion(mensaje) {
+            const notificacion = document.getElementById('notificacion');
+            const texto = document.getElementById('notificacion-text');
+            
+            texto.textContent = mensaje;
+            notificacion.style.display = 'block';
+            
+            setTimeout(() => {
+                notificacion.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mostrar atajos en consola
+            console.log('🎮 Atajos de teclado disponibles:');
+            console.log('F1 - Mostrar todos los productos');
+            console.log('F2 - Mostrar solo hamburguesas');
+            console.log('F9 - Finalizar venta');
+            console.log('F10 - Imprimir comanda');
+            console.log('ESC - Limpiar pedido');
+        });
+    </script>
+</body>
+</html>
